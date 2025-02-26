@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <style>
+    /* Gradiente no fundo */
+    body {
+      background: linear-gradient(to right, #294cff, #3238ee);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    /* Centralização e estilo do container */
+    .container {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px; /* Limita a largura máxima */
+    }
+
+    /* Título */
+    h3 {
+      text-align:center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    /* Alinhar rótulos à esquerda */
+    .form-group {
+      text-align:left;
+    }
+
+    /* Ajustando os campos */
+    .form-control {
+      width: 100%; /* Reduzindo a largura dos campos */
+      margin: 10px auto; /* Centraliza os campos */
+    }
+
+    /* Botão */
+    .btn-primary {
+      width: 100%; /* Botão com a mesma largura dos campos */
+      margin-top: 15px;
+    }
+  </style>
+  <title>Cadastro de Funcionário</title>
+</head>
+<body>
+  <div class="container">
+    <h3>Cadastro - Telefonia </h3>
+    <form id="cadastroForm">
+      <div class="form-group">
+        <label for="nomeCompleto">Nome</label>
+        <input type="text" class="form-control" id="nomeCompleto" required>
+      </div>
+      <div class="form-group">
+        <label for="rg">RG</label>
+        <input type="text" class="form-control" id="rg" required>
+      </div>
+      <div class="form-group">
+        <label for="cpf">CPF</label>
+        <input type="text" class="form-control" id="cpf" required maxlength="14">
+      </div>
+      <div class="form-group">
+        <label for="endereco">Endereço</label>
+        <input type="text" class="form-control" id="endereco" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+  </div>
+
+  <script>
+    // Função para aplicar a máscara de CPF
+    function mascaraCPF(cpf) {
+      cpf = cpf.replace(/\D/g, ""); // Remove tudo o que não for número
+      cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2"); // Coloca o ponto após os 3 primeiros números
+      cpf = cpf.replace(/(\d{3})(\d)/, "$1.$2"); // Coloca o ponto após os 3 próximos números
+      cpf = cpf.replace(/(\d{3})(\d{1,2})$/, "$1-$2"); // Coloca o traço
+      return cpf;
+    }
+
+    // Adiciona a máscara ao campo de CPF ao digitar
+    document.getElementById('cpf').addEventListener('input', function() {
+      this.value = mascaraCPF(this.value);
+    });
+
+    // Envio do formulário
+    document.getElementById('cadastroForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Impede o envio do formulário
+  
+      // Obter os valores dos campos de entrada
+      var nomeCompleto = document.getElementById('nomeCompleto').value;
+      var rg = document.getElementById('rg').value;
+      var cpf = document.getElementById('cpf').value;
+      var endereco = document.getElementById('endereco').value;
+  
+      // Criar objeto com os dados
+      var funcionario = {
+        nomeCompleto: nomeCompleto,
+        rg: rg,
+        cpf: cpf,
+        endereco: endereco
+      };
+  
+      // Substitua pela URL do seu Google Apps Script
+      var url = "https://script.google.com/macros/s/AKfycbziBoaTnKv14xmL6eN_6hL_FqEhm2yLc4aeDiiKYT-vFFQmTinLlFXr_Fi4gZEzYaDi/exec";
+  
+      fetch(url, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(funcionario)
+      }).then(() => {
+        alert("Funcionário cadastrado com sucesso!");
+        document.getElementById('cadastroForm').reset();
+      }).catch(error => console.error("Erro:", error));
+    });
+  </script>
+  
+</body>
+</html>
